@@ -1,8 +1,8 @@
 # BFF_Project_Service
 
-## 🏗️ Backend for Frontend (BFF) du projet *service*
+## 🏗️ Backend for Frontend (BFF) du service 'projet'
 
-Ce dépôt contient le **BFF (Backend for Frontend)** du projet *service*.  
+Ce dépôt contient le **BFF (Backend for Frontend)** du service 'projet'.  
 Il sert d’interface entre le frontend et les microservices du domaine *service*.
 
 ---
