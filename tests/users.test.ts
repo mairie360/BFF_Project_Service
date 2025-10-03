@@ -12,3 +12,17 @@ describe('GET /users', () => {
     expect(Array.isArray(res.body)).toBe(true);
   });
 });
+
+describe('GET /users/:id', () => {
+  it('should return a single user from fake API', async () => {
+    const res = await request(app).get('/users/1');
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('id', 1);
+  });
+
+  it('should handle non-existing user gracefully', async () => {
+    const res = await request(app).get('/users/9999');
+    expect(res.status).toBe(500);
+    expect(res.body).toHaveProperty('error', 'Failed to fetch user');
+  });
+});

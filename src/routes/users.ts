@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', async (_, res) => {
   try {
     const users = await axios.get(`${API_BASE_URL}/users`);
-    res.json(users);
+    res.json(users.data);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch users' });
   }
