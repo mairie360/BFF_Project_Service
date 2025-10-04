@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import axios from 'axios';
 import { API_BASE_URL } from '../config/network';
+import { Request, Response } from 'express';
 
 const router = Router();
 
@@ -21,24 +22,43 @@ const router = Router();
  * - If there is no response from the upstream API, a 502 Bad Gateway error is sent.
  * - For other errors, a 500 Internal Server Error is sent.
  */
-async function handleApiRequest(req: any, res: any, apiCall: () => Promise<any>) {
+
+/**
+ * Handle API requests with uniform error handling.
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param apiCall - Function returning a Promise with API data
+ */
+async function handleApiRequest<T>(
+  req: Request,
+  res: Response,
+  apiCall: () => Promise<T>
+): Promise<void> {
   try {
     const data = await apiCall();
     res.json(data);
-  } catch (error: any) {
-    console.error('API request error:', error.message);
+  } catch (error: unknown) {
+    console.error('API request error:', (error as Error).message);
 
-    if (error.response) {
-      res.status(error.response.status).json({
-        error: error.response.data || error.message,
+    const err = error as {
+      response?: { status: number; data?: unknown };
+      request?: unknown;
+      message?: string;
+    };
+
+    if (err.response) {
+      res.status(err.response.status).json({
+        error: err.response.data || err.message,
       });
-    } else if (error.request) {
+    } else if (err.request) {
       res.status(502).json({ error: 'No response from upstream API' });
     } else {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: err.message });
     }
   }
 }
+
+
 
 /**
  * @route GET /projects/:id
