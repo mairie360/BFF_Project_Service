@@ -1,5 +1,9 @@
 import express from 'express';
 import healthRouter from './routes/health';
+import dotenv from 'dotenv';
+import projectRouter from './routes/projects';
+
+dotenv.config();
 
 const app = express();
 
@@ -11,6 +15,7 @@ if (!PORT) {
 }
 
 app.use('/health', healthRouter);
+app.use('/projects', projectRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
